@@ -13,7 +13,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/usuarios")
-public class IndexController {
+public class UsuariosController {
 
     @GetMapping
     public ResponseEntity<Set<Usuario>> buscarTodos() {
