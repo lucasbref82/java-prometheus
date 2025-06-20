@@ -1,7 +1,9 @@
 package br.com.javaprometheus.controller;
 
+import br.com.javaprometheus.domain.exceptions.NaoEncontradoException;
 import br.com.javaprometheus.domain.model.Usuario;
 import br.com.javaprometheus.domain.service.UsuarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +29,15 @@ public class UsuariosController {
     }
 
     @GetMapping("/{nome}")
-    public ResponseEntity<Usuario> buscarPorNome(@PathVariable() String nome) {
-        return ResponseEntity.ok(new Usuario.Builder().id(1L).nome(nome).login("root").senha("root").build());
+    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
+        try {
+            Usuario usuario = usuarioService.buscarPorNome(nome);
+            return ResponseEntity.ok(usuario);
+        } catch (NaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

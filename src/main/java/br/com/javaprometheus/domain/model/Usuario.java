@@ -94,8 +94,6 @@ public class Usuario implements Serializable {
         }
     }
 
-
-
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
