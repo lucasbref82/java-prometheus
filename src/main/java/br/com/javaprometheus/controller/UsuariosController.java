@@ -1,5 +1,6 @@
 package br.com.javaprometheus.controller;
 
+import br.com.javaprometheus.domain.dto.MensagemRetornoDTO;
 import br.com.javaprometheus.domain.exceptions.NaoEncontradoException;
 import br.com.javaprometheus.domain.model.Usuario;
 import br.com.javaprometheus.domain.service.UsuarioService;
@@ -23,21 +24,19 @@ public class UsuariosController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> buscarTodos() {
+    public ResponseEntity<MensagemRetornoDTO> buscarTodos() {
         List<Usuario> usuarios = usuarioService.buscarTodos();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(
+                MensagemRetornoDTO
+                        .sucesso(usuarios)
+        );
     }
 
-    @GetMapping("/{nome}")
-    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
-        try {
-            Usuario usuario = usuarioService.buscarPorNome(nome);
-            return ResponseEntity.ok(usuario);
-        } catch (NaoEncontradoException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<MensagemRetornoDTO> buscarPorId(Long id) {
+        Usuario usuario  = usuarioService.buscarPorId(id);
+        return ResponseEntity.ok(MensagemRetornoDTO.sucesso(usuario));
     }
+
 
 }
