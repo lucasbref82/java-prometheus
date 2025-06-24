@@ -25,18 +25,27 @@ public class UsuariosController {
 
     @GetMapping
     public ResponseEntity<MensagemRetornoDTO> buscarTodos() {
-        List<Usuario> usuarios = usuarioService.buscarTodos();
-        return ResponseEntity.ok(
-                MensagemRetornoDTO
-                        .sucesso(usuarios)
-        );
+        try {
+            List<Usuario> usuarios = usuarioService.buscarTodos();
+            return ResponseEntity.ok(
+                    MensagemRetornoDTO.sucesso(usuarios)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MensagemRetornoDTO.erro(e.getMessage()));
+        }
+
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MensagemRetornoDTO> buscarPorId(Long id) {
-        Usuario usuario  = usuarioService.buscarPorId(id);
-        return ResponseEntity.ok(MensagemRetornoDTO.sucesso(usuario));
+        try {
+            Usuario usuario  = usuarioService.buscarPorId(id);
+            return ResponseEntity.ok(MensagemRetornoDTO.sucesso(usuario));
+        } catch (NaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MensagemRetornoDTO.erro(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MensagemRetornoDTO.erro(e.getMessage()));
+        }
     }
-
-
 }
